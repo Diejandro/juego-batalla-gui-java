@@ -3,7 +3,9 @@
 Este proyecto es una evolución visual del motor de combate original desarrollado en Java. Hemos pasado de una ejecución automática en consola a una **interfaz gráfica interactiva** que permite gestionar ejércitos en tiempo real.
 
 ## 🎮 Gameplay en Acción
-<video src="gif-shot.mp4" width="80%" autoplay loop muted playsinline></video>
+https://github.com/user-attachments/assets/31ed69d1-b136-4df7-a742-ab53108b80f0
+
+
 
 ---
 
