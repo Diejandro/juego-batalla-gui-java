@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.OutputStream;
@@ -70,7 +69,7 @@ public class Ventana_Principal {
 		ventanaPpal.add(agregaGrupoSur(), BorderLayout.CENTER);
 
 		// 1. FUERA EL PACK. Volvemos al tamaño manual, pero más ancho (800x700)
-		ventanaPpal.setSize(800, 700);
+		ventanaPpal.setSize(800, 800);
 		
 		// 2. Te recomiendo dejarlo en 'true' mientras pruebas, así si algo no cuadra puedes estirar la ventana
 		ventanaPpal.setResizable(true); 
@@ -108,31 +107,26 @@ public class Ventana_Principal {
 		JPanel grupo = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		// Solución clave: Obligar a los elementos a expandirse
+		// --- 1. SECCIÓN DE LAS LISTAS ---
 		gbc.fill = GridBagConstraints.BOTH; 
-		gbc.weightx = 1.0; // Darles peso para que ocupen lo ancho
-		gbc.weighty = 0.5; // Darles peso para que ocupen lo alto
+		gbc.weightx = 1.0; 
+		gbc.weighty = 1.0; // Le devolvemos un peso de 1.0 para que no se dejen aplastar
 
-		gbc.gridx = 0; // columna 0
-		gbc.gridy = 0; // fila 0
+		gbc.gridx = 0; 
+		gbc.gridy = 0; 
 		gbc.insets = new Insets(20, 10, 20, 10);
 		grupo.add(listaHeroes.agregarInfLista(), gbc);
 
 		gbc.gridx = 1;
 		grupo.add(listaBestias.agregarInfLista(), gbc);
 
-		/* Botón de Lucha */
+		// --- 2. SECCIÓN DEL BOTÓN ---
 		JButton lucha = new JButton("A luchar!");
 		lucha.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				lucha.setEnabled(false);
-				
-				// 1. Limpiamos la pantalla del combate anterior
 				desarrolloCombate.setText(""); 
-				
-				// 2. Recreamos combatientes frescos desde cero
 				listaHeroes.resetearEjercitos();
 				listaBestias.resetearEjercitos();
 
@@ -140,8 +134,6 @@ public class Ventana_Principal {
 					@Override
 					public void run() {
 						Guerra.batalla(listaHeroes.listaHeroes(), listaBestias.listaBestias(), desarrolloCombate);
-						
-						// Volvemos a activar el botón de forma segura
 						javax.swing.SwingUtilities.invokeLater(() -> lucha.setEnabled(true));
 					}
 				});
@@ -151,23 +143,24 @@ public class Ventana_Principal {
 		
 		gbc.gridx = 0; 
 		gbc.gridy = 1; 
-		gbc.gridwidth = 2; // Ocupa 2 columnas
-		gbc.weighty = 0.1; // Menos peso para el botón, no necesita ser muy alto
-		gbc.fill = GridBagConstraints.NONE; // El botón no queremos que se estire a lo bestia
+		gbc.gridwidth = 2; 
+		gbc.weighty = 0.0; // ¡Clave! 0.0 significa que el botón ocupa solo lo justo y necesario
+		gbc.fill = GridBagConstraints.NONE; 
 		grupo.add(lucha, gbc);
 
-		/* Text Area Combate */
-		JPanel panelCombate = new JPanel(new BorderLayout()); // BorderLayout ayuda a expandir
+		// --- 3. SECCIÓN DEL ÁREA DE TEXTO ---
+		JPanel panelCombate = new JPanel(new BorderLayout()); 
 		JScrollPane scrollPane = new JScrollPane(desarrolloCombate);
-		scrollPane.setPreferredSize(new Dimension(600, 500));
 		
+		// Le ponemos tu medida deseada como base
+		scrollPane.setPreferredSize(new Dimension(600, 260));
 		panelCombate.add(scrollPane, BorderLayout.CENTER);
 		
 		gbc.gridx = 0; 
 		gbc.gridy = 2; 
 		gbc.gridwidth = 2; 
-		gbc.weighty = 3.0; // Mucho peso al texto para que ocupe todo lo de abajo
-		gbc.fill = GridBagConstraints.BOTH; // Que se expanda
+		gbc.weighty = 1.5; // 1.5 es un 50% más alto que las listas (que tienen 1.0). Equilibrio perfecto.
+		gbc.fill = GridBagConstraints.BOTH; 
 		grupo.add(panelCombate, gbc);
 
 		EmptyBorder margen = new EmptyBorder(20, 20, 20, 20);
